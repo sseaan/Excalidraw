@@ -15,7 +15,11 @@ import fs from "fs";
 import util from "util";
 import path from "path";
 import { getMimeType } from "../../data/blob";
-import { newFreeDrawElement, newImageElement } from "../../element/newElement";
+import {
+  newEmbeddableElement,
+  newFreeDrawElement,
+  newImageElement,
+} from "../../element/newElement";
 import { Point } from "../../types";
 import { getSelectedElements } from "../../scene/selection";
 import { isLinearElementType } from "../../element/typeChecks";
@@ -183,6 +187,13 @@ export class API {
           width,
           height,
           ...base,
+        });
+        break;
+      case "embeddable":
+        element = newEmbeddableElement({
+          type: "embeddable",
+          ...base,
+          validated: null,
         });
         break;
       case "text":

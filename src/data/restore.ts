@@ -3,6 +3,7 @@ import {
   ExcalidrawSelectionElement,
   ExcalidrawTextElement,
   FontFamilyValues,
+  PointBinding,
   StrokeRoundness,
 } from "../element/types";
 import {
@@ -41,6 +42,7 @@ import {
   measureBaseline,
 } from "../element/textElement";
 import { COLOR_PALETTE } from "../colors";
+import { normalizeLink } from "./url";
 
 type RestoredAppState = Omit<
   AppState,
@@ -63,6 +65,7 @@ export const AllowedExcalidrawActiveTools: Record<
   eraser: false,
   custom: true,
   frame: true,
+  embeddable: true,
   hand: true,
 };
 
@@ -79,6 +82,13 @@ const getFontFamilyByName = (fontFamilyName: string): FontFamilyValues => {
     ] as FontFamilyValues;
   }
   return DEFAULT_FONT_FAMILY;
+};
+
+const repairBinding = (binding: PointBinding | null) => {
+  if (!binding) {
+    return null;
+  }
+  return { ...binding, focus: binding.focus || 0 };
 };
 
 const restoreElementWithProperties = <
@@ -142,7 +152,7 @@ const restoreElementWithProperties = <
       ? element.boundElementIds.map((id) => ({ type: "arrow", id }))
       : element.boundElements ?? [],
     updated: element.updated ?? getUpdatedTimestamp(),
-    link: element.link ?? null,
+    link: element.link ? normalizeLink(element.link) : null,
     locked: element.locked ?? false,
   };
 
@@ -256,8 +266,8 @@ const restoreElement = (
           (element.type as ExcalidrawElement["type"] | "draw") === "draw"
             ? "line"
             : element.type,
-        startBinding: element.startBinding,
-        endBinding: element.endBinding,
+        startBinding: repairBinding(element.startBinding),
+        endBinding: repairBinding(element.endBinding),
         lastCommittedPoint: null,
         startArrowhead,
         endArrowhead,
@@ -274,6 +284,10 @@ const restoreElement = (
       return restoreElementWithProperties(element, {});
     case "diamond":
       return restoreElementWithProperties(element, {});
+    case "embeddable":
+      return restoreElementWithProperties(element, {
+        validated: null,
+      });
     case "frame":
       return restoreElementWithProperties(element, {
         name: element.name ?? null,
