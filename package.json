@@ -96,7 +96,7 @@
     "vitest-canvas-mock": "0.3.2"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "18.0.0 - 20.x.x"
   },
   "homepage": ".",
   "name": "excalidraw",
@@ -128,8 +128,8 @@
     "test:coverage:watch": "vitest --coverage --watch",
     "test:ui": "yarn test --ui --coverage.enabled=true",
     "autorelease": "node scripts/autorelease.js",
-    "prerelease": "node scripts/prerelease.js",
+    "prerelease:excalidraw": "node scripts/prerelease.js",
     "build:preview": "yarn build && vite preview --port 5000",
-    "release": "node scripts/release.js"
+    "release:excalidraw": "node scripts/release.js"
   }
 }

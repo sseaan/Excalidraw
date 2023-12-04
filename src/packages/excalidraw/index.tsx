@@ -44,6 +44,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
     children,
     validateEmbeddable,
     renderEmbeddable,
+    aiEnabled,
   } = props;
 
   const canvasActions = props.UIOptions?.canvasActions;
@@ -55,6 +56,9 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
     canvasActions: {
       ...DEFAULT_UI_OPTIONS.canvasActions,
       ...canvasActions,
+    },
+    tools: {
+      image: props.UIOptions?.tools?.image ?? true,
     },
   };
 
@@ -119,6 +123,7 @@ const ExcalidrawBase = (props: ExcalidrawProps) => {
           onScrollChange={onScrollChange}
           validateEmbeddable={validateEmbeddable}
           renderEmbeddable={renderEmbeddable}
+          aiEnabled={aiEnabled !== false}
         >
           {children}
         </App>
@@ -241,6 +246,8 @@ export { WelcomeScreen };
 export { LiveCollaborationTrigger };
 
 export { DefaultSidebar } from "../../components/DefaultSidebar";
+export { TTDDialog } from "../../components/TTDDialog/TTDDialog";
+export { TTDDialogTrigger } from "../../components/TTDDialog/TTDDialogTrigger";
 
 export { normalizeLink } from "../../data/url";
 export { convertToExcalidrawElements } from "../../data/transform";
